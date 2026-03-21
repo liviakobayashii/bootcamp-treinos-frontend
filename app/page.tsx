@@ -22,26 +22,8 @@ export default async function Home() {
   const today = dayjs();
   const homeData = await getHomeData(today.format("YYYY-MM-DD"));
 
-  if (homeData.status === 401) redirect("/auth");
-
   if (homeData.status !== 200) {
-    const errorMsg = homeData.status === 404 
-      ? "Nenhum plano de treino ativo encontrado." 
-      : "Ocorreu um erro ao carregar os dados.";
-    const subMsg = homeData.status === 404
-      ? "Crie um plano de treino para começar!"
-      : "Tente novamente mais tarde.";
-
-    return (
-      <div className="flex min-h-svh flex-col items-center justify-center bg-background px-5">
-        <h1 className="text-center font-heading text-xl font-semibold text-foreground">
-          {errorMsg}
-        </h1>
-        <p className="mt-2 text-center text-sm text-muted-foreground">
-          {subMsg}
-        </p>
-      </div>
-    );
+    throw new Error("Failed to fetch home data");
   }
 
   const { todayWorkoutDay, workoutStreak, consistencyByDay } = homeData.data;
