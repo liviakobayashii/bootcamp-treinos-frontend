@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Weight, Ruler, BicepsFlexed, User } from "lucide-react";
-import { LogoutButton } from "./_components/logout-button";
+import { LogoutButton } from "../profile/_components/logout-button";
 
 export default async function ProfilePage() {
     const session = await authClient.getSession({
