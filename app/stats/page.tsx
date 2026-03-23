@@ -1,21 +1,14 @@
 import { redirect } from "next/navigation";
-import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
-import { getStats } from "@/app/_lib/api/fetch-generated";
+import { authClient } from "@/app/_lib/auth-client";
+import { getUserTrainData, getHomeData } from "@/app/_lib/api/fetch-generated";
 import dayjs from "dayjs";
-import { CircleCheck, CirclePercent, Hourglass } from "lucide-react";
 import { BottomNav } from "@/app/_components/bottom-nav";
-import { StreakBanner } from "./_components/streak-banner";
-import { StatsHeatmap } from "./_components/stats-heatmap";
-import { StatCard } from "./_components/stats-card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Weight, Ruler, BicepsFlexed, User } from "lucide-react";
+import { LogoutButton } from "./_components/logout-button";
 
-function formatTotalTime(totalSeconds: number): string {
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    return `${hours}h${minutes.toString().padStart(2, "0")}m`;
-}
-
-export default async function StatsPage() {
+export default async function ProfilePage() {
     const session = await authClient.getSession({
         fetchOptions: {
             headers: await headers(),
@@ -24,27 +17,31 @@ export default async function StatsPage() {
 
     if (!session.data?.user) redirect("/auth");
 
-    const today = dayjs();
-    const from = today.subtract(2, "month").startOf("month").format("YYYY-MM-DD");
-    const to = today.endOf("month").format("YYYY-MM-DD");
+    const [trainData, homeData] = await Promise.all([
+        getUserTrainData(),
+        getHomeData(dayjs().format("YYYY-MM-DD")),
+    ]);
 
-    const statsResponse = await getStats({ from, to });
-
-    if (statsResponse.status !== 200) {
-        throw new Error("Failed to fetch stats");
+    if (trainData.status !== 200) {
+        throw new Error("Failed to fetch user train data");
     }
 
-    const {
-        workoutStreak,
-        consistencyByDay,
-        completedWorkoutsCount,
-        conclusionRate,
-        totalTimeInSeconds,
-    } = statsResponse.data;
+    const needsOnboarding =
+        (homeData.status === 200 && !homeData.data.activeWorkoutPlanId) ||
+        !trainData.data;
+    if (needsOnboarding) redirect("/onboarding");
+
+    const user = session.data.user;
+    const data = trainData.data;
+
+    const weightInKg = data ? data.weightInGrams / 1000 : null;
+    const heightInCm = data?.heightInCentimeters ?? null;
+    const bodyFatPercentage = data?.bodyFatPercentage ?? null;
+    const age = data?.age ?? null;
 
     return (
         <div className="flex min-h-svh flex-col bg-background pb-24">
-            <div className="flex h-14 items-center px-5">
+            <div className="flex h-[56px] items-center px-5">
                 <p
                     className="text-[22px] uppercase leading-[1.15] text-foreground"
                     style={{ fontFamily: "var(--font-anton)" }}
@@ -53,38 +50,88 @@ export default async function StatsPage() {
                 </p>
             </div>
 
-            <div className="px-5">
-                <StreakBanner workoutStreak={workoutStreak} />
-            </div>
-
-            <div className="flex flex-col gap-3 p-5">
-                <h2 className="font-heading text-lg font-semibold text-foreground">
-                    Consistência
-                </h2>
-
-                <StatsHeatmap consistencyByDay={consistencyByDay} today={today} />
-
-                <div className="grid grid-cols-2 gap-3">
-                    <StatCard
-                        icon={CircleCheck}
-                        value={String(completedWorkoutsCount)}
-                        label="Treinos Feitos"
-                    />
-                    <StatCard
-                        icon={CirclePercent}
-                        value={`${Math.round(conclusionRate * 100)}%`}
-                        label="Taxa de conclusão"
-                    />
+            <div className="flex flex-col items-center gap-5 px-5 pt-5">
+                <div className="flex w-full items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <Avatar className="size-[52px]">
+                            <AvatarImage src={user.image ?? undefined} alt={user.name} />
+                            <AvatarFallback className="text-lg">
+                                {user.name?.charAt(0)?.toUpperCase()}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col gap-1.5">
+                            <h1 className="font-heading text-lg font-semibold leading-[1.05] text-foreground">
+                                {user.name}
+                            </h1>
+                            <p className="font-heading text-sm leading-[1.15] text-foreground/70">
+                                Plano Basico
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                <StatCard
-                    icon={Hourglass}
-                    value={formatTotalTime(totalTimeInSeconds)}
-                    label="Tempo Total"
-                />
+                <div className="grid w-full grid-cols-2 gap-3">
+                    <div className="flex flex-col items-center gap-5 rounded-xl bg-primary/8 p-5">
+                        <div className="flex items-center rounded-full bg-primary/8 p-[9px]">
+                            <Weight className="size-4 text-primary" />
+                        </div>
+                        <div className="flex flex-col items-center gap-1.5">
+                            <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
+                                {weightInKg ?? "-"}
+                            </span>
+                            <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
+                                Kg
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-5 rounded-xl bg-primary/8 p-5">
+                        <div className="flex items-center rounded-full bg-primary/8 p-[9px]">
+                            <Ruler className="size-4 text-primary" />
+                        </div>
+                        <div className="flex flex-col items-center gap-1.5">
+                            <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
+                                {heightInCm ?? "-"}
+                            </span>
+                            <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
+                                Cm
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-5 rounded-xl bg-primary/8 p-5">
+                        <div className="flex items-center rounded-full bg-primary/8 p-[9px]">
+                            <BicepsFlexed className="size-4 text-primary" />
+                        </div>
+                        <div className="flex flex-col items-center gap-1.5">
+                            <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
+                                {bodyFatPercentage != null ? `${bodyFatPercentage}%` : "-"}
+                            </span>
+                            <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
+                                Gc
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-5 rounded-xl bg-primary/8 p-5">
+                        <div className="flex items-center rounded-full bg-primary/8 p-[9px]">
+                            <User className="size-4 text-primary" />
+                        </div>
+                        <div className="flex flex-col items-center gap-1.5">
+                            <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
+                                {age ?? "-"}
+                            </span>
+                            <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
+                                Anos
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <LogoutButton />
             </div>
 
-            <BottomNav activePage="stats" />
+            <BottomNav activePage="profile" />
         </div>
     );
 }
