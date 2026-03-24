@@ -111,7 +111,8 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                     : "flex flex-1 flex-col overflow-hidden rounded-[20px] bg-background"
             }
         >
-            <div className="flex shrink-0 items-center justify-between border-b border-border p-5">
+            <div className="mx-auto w-full max-w-4xl flex flex-1 flex-col overflow-hidden">
+                <div className="flex shrink-0 items-center justify-between border-b border-border p-5">
                 <div className="flex items-center gap-2">
                     <div className="flex items-center justify-center rounded-full bg-primary/8 border border-primary/8 p-3">
                         <Sparkles className="size-[18px] text-primary" />
@@ -235,18 +236,19 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                 </Form>
             </div>
         </div>
-    );
+    </div>
+);
 
     if (embedded) return chatContent;
 
     return (
-        <div className="fixed inset-0 z-[60]">
+        <div className="fixed inset-0 z-60 flex items-end justify-center md:items-center md:justify-center p-4">
             <div
-                className="absolute inset-0 bg-foreground/30"
+                className="absolute inset-0 bg-foreground/30 backdrop-blur-sm"
                 onClick={handleClose}
             />
 
-            <div className="absolute inset-x-4 bottom-4 top-40 flex flex-col">
+            <div className="relative flex h-[80vh] w-full max-w-lg flex-col overflow-hidden rounded-[20px] bg-background shadow-2xl md:h-[600px]">
                 {chatContent}
             </div>
         </div>

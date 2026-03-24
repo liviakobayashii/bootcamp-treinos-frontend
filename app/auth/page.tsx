@@ -41,21 +41,21 @@ export default function AuthPage() {
 
             <div className="flex-1" />
 
-            <div className="relative z-10 flex flex-col items-center gap-15 rounded-t-[20px] bg-primary px-5 pb-10 pt-12">
+            <div className="relative z-10 mx-auto mt-auto flex w-full max-w-xl flex-col items-center gap-15 rounded-t-[20px] bg-primary px-5 pb-10 pt-12 md:mb-12 md:rounded-3xl shadow-2xl">
                 <div className="flex w-full flex-col items-center gap-6">
-                    <h1 className="w-full text-center font-heading text-[32px] font-semibold leading-[1.05] text-primary-foreground">
+                    <h1 className="w-full text-center font-heading text-[32px] font-semibold leading-[1.05] text-primary-foreground md:text-[40px]">
                         O app que vai transformar a forma como você treina.
                     </h1>
 
                     <Button
                         onClick={handleGoogleLogin}
-                        className="h-[38px] rounded-full bg-white px-6 text-black hover:bg-white/90"
+                        className="h-12 rounded-full bg-white px-8 text-black hover:bg-white/90 shadow-md transition-all active:scale-95"
                     >
                         <Image
                             src="/google-icon.svg"
                             alt=""
-                            width={16}
-                            height={16}
+                            width={20}
+                            height={20}
                             className="shrink-0"
                         />
                         Fazer login com Google

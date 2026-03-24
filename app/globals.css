@@ -136,3 +136,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .container {
+    @apply mx-auto w-[95%] sm:w-[90%] max-w-[1400px];
+  }
+}
