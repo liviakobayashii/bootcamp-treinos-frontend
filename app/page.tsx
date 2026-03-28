@@ -74,11 +74,16 @@ export default async function Home() {
                 Bora treinar hoje?
               </p>
             </div>
-            <div className="rounded-full bg-primary px-4 py-2 transition-transform hover:scale-105 active:scale-95 cursor-pointer">
-              <span className="font-heading text-sm font-semibold text-primary-foreground">
-                Bora!
-              </span>
-            </div>
+            {todayWorkoutDay && (
+              <Link
+                href={`/workout-plans/${todayWorkoutDay.workoutPlanId}/days/${todayWorkoutDay.id}`}
+                className="rounded-full bg-primary px-4 py-2 transition-transform hover:scale-105 active:scale-95"
+              >
+                <span className="font-heading text-sm font-semibold text-primary-foreground">
+                  Bora!
+                </span>
+              </Link>
+            )}
           </div>
         </div>
 
