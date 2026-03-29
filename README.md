@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💪 Fit AI — Front-end
 
-## Getting Started
+Interface web da plataforma **Fit AI**, desenvolvida durante o **Bootcamp Gestão de Treinos** com o professor **Felipe Rocha**.
 
-First, run the development server:
+O front-end é responsável pela experiência do usuário, permitindo acesso aos treinos personalizados, acompanhamento de progresso e interação com o chat de IA.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Funcionalidades
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Visualização de treinos personalizados
+- Acompanhamento de consistência (streaks e calendário)
+- Chat com IA em tempo real
+- Onboarding e gestão de perfil
+- Autenticação com Google
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🧩 Tecnologias utilizadas
 
-To learn more about Next.js, take a look at the following resources:
+- Next.js
+- TypeScript
+- React
+- TanStack Query
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📦 Bibliotecas utilizadas
 
-## Deploy on Vercel
+- ShadCN UI
+- Tailwind CSS
+- React Hook Form
+- Zod
+- Better Auth
+- Vercel AI SDK
+- Google AI SDK
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔗 Deploy do projeto
