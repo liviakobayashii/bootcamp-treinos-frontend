@@ -38,3 +38,4 @@ O front-end é responsável pela experiência do usuário, permitindo acesso aos
 ---
 
 ## 🔗 Deploy do projeto
+https://www.fit-ai.liviakobayashi.com.br
